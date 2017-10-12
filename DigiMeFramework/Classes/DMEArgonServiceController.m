@@ -13,21 +13,21 @@
 #import "NSError+Helper.h"
 #import "NSString+SSExtensions.h"
 
-static const NSString* kDigimeConsentAccessVersion              = @"1.0.0";
-static const NSString* kDigimeConsentAccessPathSessionKeyCreate = @"v1/permission-access/session";
-static const NSString* kDigimeConsentAccessPathDataGet          = @"v1/permission-access/query";
-static const NSString* kDownloadQueue                           = @"kDownloadQueue";
-static const NSInteger kMaxConcurrentOperationCount             = 10;
+static const NSString  *kDigimeConsentAccessVersion              = @"1.0.0";
+static const NSString  *kDigimeConsentAccessPathSessionKeyCreate = @"v1/permission-access/session";
+static const NSString  *kDigimeConsentAccessPathDataGet          = @"v1/permission-access/query";
+static const NSString  *kDownloadQueue                           = @"kDownloadQueue";
+static const NSInteger  kMaxConcurrentOperationCount             = 10;
 
 @interface DMEArgonServiceController() <NSURLSessionDelegate>
 
 @property (nonatomic, copy, nullable) void (^returnFinalDataCompletionHandler)(NSArray<NSString *>* _Nullable fileNames, NSDictionary* _Nullable filesWithContent, NSError* _Nullable error);
 
-@property (nonatomic, strong) NSString*             sessionKey;
-@property (nonatomic, strong) NSArray*              fileList;
-@property (nonatomic, strong) NSMutableDictionary*  filesWithContent;
-@property (nonatomic, strong) NSOperationQueue*     downloadQueue;
-@property (nonatomic, strong) NSLock*               filesWithContentLock;
+@property (nonatomic, strong) NSString             *sessionKey;
+@property (nonatomic, strong) NSArray              *fileList;
+@property (nonatomic, strong) NSMutableDictionary  *filesWithContent;
+@property (nonatomic, strong) NSOperationQueue     *downloadQueue;
+@property (nonatomic, strong) NSLock               *filesWithContentLock;
 
 @end
 
@@ -53,13 +53,13 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
     _fileList           = nil;
     _filesWithContent   = nil;
     
-    self.downloadQueue = [[NSOperationQueue alloc] init];
-    self.downloadQueue.maxConcurrentOperationCount = kMaxConcurrentOperationCount;
+    _downloadQueue = [[NSOperationQueue alloc] init];
+    _downloadQueue.maxConcurrentOperationCount = kMaxConcurrentOperationCount;
     
-    [self.downloadQueue addObserver:self
-                         forKeyPath:NSStringFromSelector(@selector(operationCount))
-                            options:NSKeyValueObservingOptionNew
-                            context:&kDownloadQueue];
+    [_downloadQueue addObserver:self
+                     forKeyPath:NSStringFromSelector(@selector(operationCount))
+                        options:NSKeyValueObservingOptionNew
+                        context:&kDownloadQueue];
     
 }
 
@@ -82,7 +82,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
     self.downloadQueue = nil;
     self.isDownloadingData = NO;
     
-    for (NSOperation* o in [[NSOperationQueue mainQueue] operations])
+    for (NSOperation * o in [[NSOperationQueue mainQueue] operations])
     {
         [o cancel];
     }
@@ -91,55 +91,53 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
 }
 
 #pragma mark - CA Argon Key Request. Get New Session Key.
-- (void)sessionKeyCreateWithAppID:(nonnull NSString*)appID
-                   withContractID:(nonnull NSString*)contractID
-                   withCompletion:(void(^)(NSString* _Nullable sessionKey, NSTimeInterval expiry, NSError* _Nullable error))completion
+- (void)sessionKeyCreateWithAppID:(nonnull NSString *)appID
+                   withContractID:(nonnull NSString *)contractID
+                   withCompletion:(void(^)(NSString * _Nullable sessionKey, NSTimeInterval expiry, NSError * _Nullable error))completion
 {
     [self digimeFrameworkLogWithMessage:NSLocalizedString(@"Starting to retrive session key from digi.me API.",nil)];
     
-    NSAssert(appID.length >= 5,  @"app ID cannot be shorter than 5");
-    NSAssert(appID.length <= 16, @"app ID cannot be longer than 16");
+    NSAssert(appID.length >= 1,  @"app ID cannot be shorter than 1");
     NSAssert(contractID.length >= 1, @"contract ID cannot be shorter than 1");
-    NSAssert(contractID.length <= 64, @"contract ID cannot be longer than 64");
     
-    NSString*                   host            = [self baseUrl];
-    NSURLComponents*            components      = [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%@%@"
+    NSString                   *host            = [self baseUrl];
+    NSURLComponents            *components      = [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%@%@"
                                                                          , host
                                                                          , kDigimeConsentAccessPathSessionKeyCreate]];
-    NSURL*                      url             = components.URL;
-    NSURLSessionConfiguration*  configuration   = [NSURLSessionConfiguration defaultSessionConfiguration];
-    configuration.HTTPAdditionalHeaders         = @{ @"Content-Type" : @"application/json", @"Accept" : @"application/json"};
-    NSURLSession*               session         = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSMutableURLRequest*        request         = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:360.0];
-    NSDictionary*               keysData        = @{@"appId" : appID, @"contractId" : contractID};
-    NSData*                     postData        = [NSJSONSerialization dataWithJSONObject:keysData options:0 error:nil];
+    NSURL                      *url             = components.URL;
+    NSURLSessionConfiguration  *configuration   = [NSURLSessionConfiguration defaultSessionConfiguration];
+    configuration.HTTPAdditionalHeaders         = @{ @"Content-Type" : @"application/json", @"Accept" : @"application/json" };
+    NSURLSession               *session         = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSMutableURLRequest        *request         = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:360.0];
+    NSDictionary               *keysData        = @{ @"appId" : appID, @"contractId" : contractID };
+    NSData                     *postData        = [NSJSONSerialization dataWithJSONObject:keysData options:0 error:nil];
     
     [request setHTTPBody:postData];
     [request setHTTPMethod:@"POST"];
 
     __weak __typeof(DMEArgonServiceController *)weakSelf = self;
     
-    NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
          __strong __typeof(DMEArgonServiceController *)strongSelf = weakSelf;
         
         [strongSelf digimeFrameworkLogWithMessage:NSLocalizedString(@"Received response from digi.me API on get session key request.",nil)];
         
-        if(error)
+        if (error)
         {
-            if(completion)
+            if (completion)
                 completion(nil,0,error);
             
             [strongSelf cancelAllOperations];
             return;
         }
-        NSError*            parsingError        = nil;
-        NSDictionary*       responseDictionary  = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parsingError];
-        NSHTTPURLResponse*  httpResponse        = (NSHTTPURLResponse *) response;
+        NSError            *parsingError        = nil;
+        NSDictionary       *responseDictionary  = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parsingError];
+        NSHTTPURLResponse  *httpResponse        = (NSHTTPURLResponse *) response;
         
-        if(parsingError)
+        if (parsingError)
         {
-            if(strongSelf.returnFinalDataCompletionHandler)
+            if (strongSelf.returnFinalDataCompletionHandler)
                 strongSelf.returnFinalDataCompletionHandler(nil,nil,parsingError);
             
             [strongSelf cancelAllOperations];
@@ -148,8 +146,8 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
         
         if (httpResponse && (httpResponse.statusCode == 202 || httpResponse.statusCode == 200) && responseDictionary)
         {
-            NSString*       sessionKey          = responseDictionary[@"sessionKey"];
-            NSTimeInterval  expiry              = [responseDictionary[@"expiry"] longLongValue];
+            NSString       *sessionKey = responseDictionary[@"sessionKey"];
+            NSTimeInterval  expiry     = [responseDictionary[@"expiry"] longLongValue];
             
             if (sessionKey)
             {
@@ -157,35 +155,25 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                 
                 [strongSelf digimeFrameworkLogWithMessage:[NSString stringWithFormat:NSLocalizedString(@"Session Key request succeeded. Data received. Key: %@",nil),sessionKey]];
                 
-                if(completion)
+                if (completion)
+                {
                     completion(sessionKey,expiry,nil);
-            }
-            else
-            {
-                if(completion)
-                    completion(nil,0,[[NSError alloc] errorForErrorCode:ErrorSessionCreateSessionKeyNotReceived]);
-                
-                [strongSelf cancelAllOperations];
+                    return;
+                }
             }
         }
-        else if (httpResponse && httpResponse.statusCode == 403)
+        
+        if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]])
         {
-            if(completion)
-                completion(nil,0,[[NSError alloc] errorForErrorCode:ErrorSessionCreateAppIdRevoke]);
-            
-            [strongSelf cancelAllOperations];
-        }
-        else if (httpResponse && httpResponse.statusCode == 410)
-        {
-            if(completion)
-                completion(nil,0,[[NSError alloc] errorForErrorCode:ErrorSessionCreateContractHasExpired]);
+            if (completion)
+                completion(nil,0,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]); // Argon alpha will return some more debugging info and not just a string message. Here we need to be wrapped as a formatted string.
             
             [strongSelf cancelAllOperations];
         }
         else
         {            
-            if(completion)
-                completion(nil,0,[[NSError alloc] errorForErrorCode:ErrorSessionCreateBadResponse]);
+            if (completion)
+                completion(nil,0,[[NSError alloc] errorForErrorCode:ErrorSessionCreateBadResponse errorMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateBadResponse]]);
             
             [strongSelf cancelAllOperations];
         }
@@ -196,7 +184,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
 
 - (BOOL)sessionKeyIsValid:(NSString*)sessionKey
 {
-    if(!sessionKey || !self.sessionKey)
+    if (!sessionKey || !self.sessionKey)
         return NO;
     
     return [sessionKey isEqualToString:self.sessionKey];
@@ -206,26 +194,25 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
 - (void)getDataWithCompletion:(void(^)(NSArray<NSString *>* _Nullable fileNames, NSDictionary* _Nullable filesWithContent, NSError* _Nullable error))completion
 {
     self.returnFinalDataCompletionHandler = completion;
-    NSDate* startDate = [NSDate date];
+    NSDate          *startDate  = [NSDate date];
     [self digimeFrameworkLogWithMessage:NSLocalizedString(@"Connecting to digi.me API with Files List Get request...",nil)];
-    NSString*                   host            = [self baseUrl];
-    NSURLComponents*            components      = [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%@%@/%@"
+    NSString        *host       = [self baseUrl];
+    NSURLComponents *components = [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%@%@/%@"
                                                                          , host
                                                                          , kDigimeConsentAccessPathDataGet
                                                                          , self.sessionKey]];
     
-    NSURL*                      url             = components.URL;
-    NSURLSessionConfiguration*  configuration   = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURL                      *url             = components.URL;
+    NSURLSessionConfiguration  *configuration   = [NSURLSessionConfiguration defaultSessionConfiguration];
     configuration.HTTPAdditionalHeaders         = @{ @"Content-Type" : @"application/json", @"Accept" : @"application/json"};
-    NSURLSession*               session         = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-    NSMutableURLRequest*        request         = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:360.0];
+    NSURLSession               *session         = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSMutableURLRequest        *request         = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:360.0];
 
     [request setHTTPMethod:@"GET"];
     
-    NSLog(@"GET list request: %@", request);
     __weak __typeof(DMEArgonServiceController *)weakSelf = self;
     
-    NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         __strong __typeof(DMEArgonServiceController *)strongSelf = weakSelf;
         NSTimeInterval timePassed = [startDate timeIntervalSinceNow] * -1;
@@ -238,22 +225,21 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
         
         [strongSelf digimeFrameworkLogWithMessage:[NSString stringWithFormat:@"Response time: %0.2ld:%0.2ld:%0.2ld,%0.3ld", hours, minutes, seconds, (long)ms]];
         
-        if(error)
+        if (error)
         {
-            if(completion)
+            if (completion)
                 completion(nil,nil,error);
             [strongSelf cancelAllOperations];
             return;
         }
         
-        NSError*            parsingError        = nil;
-        NSDictionary*       responseDictionary  = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parsingError];
-        NSHTTPURLResponse*  httpResponse        = (NSHTTPURLResponse *)response;
+        NSError            *parsingError        = nil;
+        NSDictionary       *responseDictionary  = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parsingError];
+        NSHTTPURLResponse  *httpResponse        = (NSHTTPURLResponse *)response;
         
-        if(parsingError)
+        if (parsingError)
         {
-            NSLog(@"File Data Get LIST Parsing error (%@)",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            if(strongSelf.returnFinalDataCompletionHandler)
+            if (strongSelf.returnFinalDataCompletionHandler)
                 strongSelf.returnFinalDataCompletionHandler(nil,nil,parsingError);
             [strongSelf cancelAllOperations];
             return;
@@ -270,14 +256,14 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                 
                 NSOperation *finalOp = [NSBlockOperation blockOperationWithBlock:^{
                     
-                    if(strongSelf.fileList.count == strongSelf.filesWithContent.count && strongSelf.returnFinalDataCompletionHandler)
+                    if (strongSelf.fileList.count == strongSelf.filesWithContent.count && strongSelf.returnFinalDataCompletionHandler)
                     {
                         strongSelf.isDownloadingData = NO;
                         strongSelf.returnFinalDataCompletionHandler(strongSelf.fileList,strongSelf.filesWithContent,nil);
                     }
                 } ];
                 
-                for(NSString* fileName in fileList)
+                for(NSString *fileName in fileList)
                 {
                     NSOperation *downloadOperation = [strongSelf getFileContentDataWithFileNameOperation:fileName];
                     [finalOp addDependency:downloadOperation];
@@ -285,18 +271,22 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                 }
                 
                 [strongSelf.downloadQueue addOperation:finalOp];
+                return;
             }
-            else
-            {
-                if(completion)
-                    completion(nil,nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFilesListDataIsNotCorrect]);
-                [strongSelf cancelAllOperations];
-            }
+        }
+        
+        if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]])
+        {
+            if (completion)
+                completion(nil,0,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]); // Argon alpha will return some more debugging info and not just a string message. Here we need to be wrapped as a formatted string.
+            
+            [strongSelf cancelAllOperations];
         }
         else
         {
-            if(completion)
-                completion(nil,nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFilesListServerResponseWithError]);
+            if (completion)
+                completion(nil,0,[[NSError alloc] errorForErrorCode:ErrorDataGetFilesListServerResponseWithError errorMessage:[NSError getLocalizedMessageForErrorCode:ErrorDataGetFilesListServerResponseWithError]]);
+            
             [strongSelf cancelAllOperations];
         }
     }];
@@ -337,14 +327,16 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
             
             NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 
+                NSLog(@"File Get Content (%@) %@ %@",fileName, response, error);
+
                 __strong __typeof(DMEArgonServiceController *)strongSelf = weakSelf;
                 __strong __typeof(DMERunLoopOperation *)strongOperation = weakOperation;
                 
                 NSLog(@"Response on File Data Get request (%@)",fileName);
                 
-                if(error)
+                if (error)
                 {
-                    if(strongSelf.returnFinalDataCompletionHandler)
+                    if (strongSelf.returnFinalDataCompletionHandler)
                         strongSelf.returnFinalDataCompletionHandler(nil,nil,error);
                     
                     [strongSelf cancelAllOperations];
@@ -355,10 +347,10 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                 NSDictionary*       responseDictionary  = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parsingError];
                 NSHTTPURLResponse*  httpResponse        = (NSHTTPURLResponse *)response;
                 
-                if(parsingError)
+                if (parsingError)
                 {
                     NSLog(@"File Data Get Parsing error (%@)",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                    if(strongSelf.returnFinalDataCompletionHandler)
+                    if (strongSelf.returnFinalDataCompletionHandler)
                         strongSelf.returnFinalDataCompletionHandler(nil,nil,parsingError);
                     
                     [strongSelf cancelAllOperations];
@@ -367,7 +359,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                 
                 if (httpResponse && httpResponse.statusCode == 200 && responseDictionary)
                 {
-                    if(!strongSelf.filesWithContent)
+                    if (!strongSelf.filesWithContent)
                     {
                         strongSelf.filesWithContent = [NSMutableDictionary new];
                         strongSelf.filesWithContentLock = [[NSLock alloc] init];
@@ -375,7 +367,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                     
                     NSString* base64Encoded = [responseDictionary objectForKey:@"fileContent"];
                     
-                    if(base64Encoded && [base64Encoded isKindOfClass:[NSString class]] && [base64Encoded isBase64])
+                    if (base64Encoded && [base64Encoded isKindOfClass:[NSString class]] && [base64Encoded isBase64])
                     {
                         NSData* encryptedData = [[DMESecurityController sharedInstance] base64DataFromString:base64Encoded];
                         NSData* privateKeyData = [[DMESecurityController sharedInstance] rsaPrivateKeyDataGet];
@@ -393,7 +385,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                             [strongSelf.filesWithContentLock unlock];
                         } 
                     }
-                    else if([[responseDictionary objectForKey:@"fileContent"] isKindOfClass:[NSArray class]])
+                    else if ([[responseDictionary objectForKey:@"fileContent"] isKindOfClass:[NSArray class]])
                     {
                         NSArray* fileContent = [responseDictionary objectForKey:@"fileContent"];
                         NSAssert(fileContent != nil, @"File content data is nil");
@@ -404,18 +396,16 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                     }
                     else
                     {
-                        if(strongSelf.returnFinalDataCompletionHandler)
-                            strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFileDataDataIsNotCorrect]);
+                        if (strongSelf.returnFinalDataCompletionHandler)
+                            strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]); // Argon alpha will return some more debugging info and not just a string message. Here we need to be wrapped as a formatted string.
                         [strongSelf cancelAllOperations];
                     }
                 }
-                else if(httpResponse && httpResponse.statusCode == 404)
+                else if (httpResponse && httpResponse.statusCode == 404)
                 {
-                    NSLog(@"Received response. File is not ready. Requesting one more time. (%@)",fileName,nil);
-
                     NSOperation *finalOp = [NSBlockOperation blockOperationWithBlock:^{
                         
-                        if(strongSelf.fileList.count == strongSelf.filesWithContent.count && strongSelf.returnFinalDataCompletionHandler)
+                        if (strongSelf.fileList.count == strongSelf.filesWithContent.count && strongSelf.returnFinalDataCompletionHandler)
                         {
                             strongSelf.isDownloadingData = NO;
                             strongSelf.returnFinalDataCompletionHandler(strongSelf.fileList,strongSelf.filesWithContent,nil);
@@ -426,10 +416,16 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
                     [finalOp addDependency:downloadOperation];
                     [strongSelf.downloadQueue addOperation:downloadOperation];
                 }
+                else if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]])
+                {
+                    if (strongSelf.returnFinalDataCompletionHandler)
+                        strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]); // Argon alpha will return some more debugging info and not just a string message. Here we need to be wrapped as a formatted string.
+                    [strongSelf cancelAllOperations];
+                }
                 else
                 {
-                    if(strongSelf.returnFinalDataCompletionHandler)
-                        strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFileDataServerResponseWithError]);
+                    if (strongSelf.returnFinalDataCompletionHandler)
+                        strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFileDataServerResponseWithError errorMessage:[NSError getLocalizedMessageForErrorCode:ErrorDataGetFileDataServerResponseWithError]]);
                     [strongSelf cancelAllOperations];
                 }
                 
@@ -463,7 +459,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
         NSString *domain = [[NSBundle bundleForClass:[self class]] objectForInfoDictionaryKey:@"ArgonDomain"];
         if (!domain)
         {
-            domain = @"digi.me";
+            domain = @"alpha.devdigi.me";
         }
         argonURL = [NSString stringWithFormat:@"https://api.%@/", domain];
     }
@@ -474,7 +470,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
 #pragma mark - digi.me client framwork delegate methods
 -(void)digimeFrameworkLogWithMessage:(NSString*)message
 {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkLogWithMessage:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkLogWithMessage:)])
     {
         [self.delegate digimeFrameworkLogWithMessage:message];
     }
@@ -482,7 +478,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
 
 - (void)digimeFrameworkDidChangeOperationState:(DigiMeFrameworkOperationState)state
 {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkDidChangeOperationState:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkDidChangeOperationState:)])
     {
         [self.delegate digimeFrameworkDidChangeOperationState:state];
     }
@@ -492,13 +488,13 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
 {
     float progress = (float)self.filesWithContent.count / self.fileList.count;
     
-    if(progress < 0.0f)
+    if (progress < 0.0f)
         progress = 0.0f;
     
-    if(progress > 1.0f)
+    if (progress > 1.0f)
         progress = 1.0f;
     
-    if(self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkJsonFilesDownloadProgress:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkJsonFilesDownloadProgress:)])
     {
         [self.delegate digimeFrameworkJsonFilesDownloadProgress:progress];
     }
@@ -515,7 +511,7 @@ static const NSInteger kMaxConcurrentOperationCount             = 10;
         NSNumber *operationCount = change[NSKeyValueChangeNewKey];
         if (operationCount.integerValue == 0 && self.fileList.count == self.filesWithContent.count)
         {
-            if(self.fileList.count == self.filesWithContent.count && self.returnFinalDataCompletionHandler)
+            if (self.fileList.count == self.filesWithContent.count && self.returnFinalDataCompletionHandler)
             {
                 self.isDownloadingData = NO;
                 [self digimeFrameworkDidChangeOperationState:StateDataRequestReceived];
