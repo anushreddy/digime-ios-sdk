@@ -257,24 +257,24 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
 {
     if (error && error.code == ErrorSessionCreateAppIdRevoke)
     {
-        [self alertWithMessage:NSLocalizedString(@"Sorry, this application is no longer valid for Consent Access", nil)];
+        [self alertWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateAppIdRevoke]];
     }
     
     if (error && error.code == ErrorSessionCreateContractHasExpired)
     {
-        [self alertWithMessage:NSLocalizedString(@"Sorry, Consent Access contract has expired", nil)];
+        [self alertWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateContractHasExpired]];
     }
     
     if(error && self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkReceiveDataWithFileNames:filesWithContent:error:)])
     {
-        [self digimeFrameworkLogWithMessage:[NSString stringWithFormat:@"Error. %@",error.localizedDescription]];
+        [self digimeFrameworkLogWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateContractHasExpired]];
         [self.delegate digimeFrameworkReceiveDataWithFileNames:nil filesWithContent:nil error:error];
     }
 }
 
 -(void)terminateWithErrorID:(DigiMeFrameworkErrorCode)errorCode
 {
-    NSError* error = [[NSError alloc]errorForErrorCode:errorCode];
+    NSError* error = [[NSError alloc]errorForErrorCode:errorCode errorMessage:[NSError getLocalizedMessageForErrorCode:errorCode]];
     
     if(error && self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkReceiveDataWithFileNames:filesWithContent:error:)])
     {
