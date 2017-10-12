@@ -255,19 +255,9 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
 #pragma mark - Private methods
 -(void)terminateWithError:(NSError*)error
 {
-    if (error && error.code == ErrorSessionCreateAppIdRevoke)
+    if (error && self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkReceiveDataWithFileNames:filesWithContent:error:)])
     {
-        [self alertWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateAppIdRevoke]];
-    }
-    
-    if (error && error.code == ErrorSessionCreateContractHasExpired)
-    {
-        [self alertWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateContractHasExpired]];
-    }
-    
-    if(error && self.delegate && [self.delegate respondsToSelector:@selector(digimeFrameworkReceiveDataWithFileNames:filesWithContent:error:)])
-    {
-        [self digimeFrameworkLogWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateContractHasExpired]];
+        [self digimeFrameworkLogWithMessage:error.localizedDescription];
         [self.delegate digimeFrameworkReceiveDataWithFileNames:nil filesWithContent:nil error:error];
     }
 }
@@ -280,6 +270,22 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
     {
         [self digimeFrameworkLogWithMessage:error.localizedDescription];
         [self.delegate digimeFrameworkReceiveDataWithFileNames:nil filesWithContent:nil error:error];
+    }
+}
+
+-(void)notifyUserWithErrorCode:(DigiMeFrameworkErrorCode)errorCode
+{
+    if (errorCode == ErrorSessionCreateAppIdRevoke)
+    {
+        [self alertWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateAppIdRevoke]];
+    }
+    else if (errorCode == ErrorSessionCreateAppIdNotFound)
+    {
+        [self alertWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateAppIdNotFound]];
+    }
+    else if (errorCode == ErrorSessionCreateContractNotFound)
+    {
+        [self alertWithMessage:[NSError getLocalizedMessageForErrorCode:ErrorSessionCreateContractNotFound]];
     }
 }
 
@@ -304,23 +310,14 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
     return queryItem.value;
 }
 
--(void)alertWithMessage:(NSString*)message
+-(void)alertWithMessage:(NSString *)message
 {
-    UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@"digi.me" message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction*     defaultAction   = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
-    
-    [alertController addAction:defaultAction];
-    
-    id rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
-    if([rootViewController isKindOfClass:[UINavigationController class]])
-    {
-        rootViewController = ((UINavigationController *)rootViewController).viewControllers.firstObject;
-    }
-    if([rootViewController isKindOfClass:[UITabBarController class]])
-    {
-        rootViewController = ((UITabBarController *)rootViewController).selectedViewController;
-    }
-    [rootViewController presentViewController:alertController animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"digi.me" message:message preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction     *defaultAction   = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
+        [alertController addAction:defaultAction];
+        [[DMEUtilities topmostViewController] presentViewController:alertController animated:YES completion:nil];
+    });
 }
 
 @end

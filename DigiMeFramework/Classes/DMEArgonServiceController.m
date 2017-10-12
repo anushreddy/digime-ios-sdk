@@ -13,6 +13,12 @@
 #import "NSError+Helper.h"
 #import "NSString+SSExtensions.h"
 
+const struct ArgonErrorCodes ArgonErrorCode =
+{
+    .InvalidConsentAccessApplication = @"InvalidConsentAccessApplication",
+    .InvalidContractId               = @"InvalidContractId",
+};
+
 static const NSString  *kDigimeConsentAccessVersion              = @"1.0.0";
 static const NSString  *kDigimeConsentAccessPathSessionKeyCreate = @"v1/permission-access/session";
 static const NSString  *kDigimeConsentAccessPathDataGet          = @"v1/permission-access/query";
@@ -165,6 +171,15 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
         
         if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]])
         {
+            if (httpResponse.statusCode == 403 && [[responseDictionary valueForKeyPath:@"error.code"] isEqualToString: ArgonErrorCode.InvalidConsentAccessApplication] )
+               [strongSelf.delegate notifyUserWithErrorCode:ErrorSessionCreateAppIdRevoke];
+            
+            if (httpResponse.statusCode == 404 && [[responseDictionary valueForKeyPath:@"error.code"] isEqualToString: ArgonErrorCode.InvalidConsentAccessApplication] )
+                [strongSelf.delegate notifyUserWithErrorCode:ErrorSessionCreateAppIdNotFound];
+            
+            if (httpResponse.statusCode == 404 && [[responseDictionary valueForKeyPath:@"error.code"] isEqualToString: ArgonErrorCode.InvalidContractId] )
+                [strongSelf.delegate notifyUserWithErrorCode:ErrorSessionCreateContractNotFound];
+            
             if (completion)
                 completion(nil,0,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]); // Argon alpha will return some more debugging info and not just a string message. Here we need to be wrapped as a formatted string.
             

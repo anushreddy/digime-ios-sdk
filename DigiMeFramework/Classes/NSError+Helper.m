@@ -98,9 +98,17 @@
             break;
             
         case ErrorSessionCreateAppIdRevoke:
-            return NSLocalizedString(@"digi.me Consent Access. Sorry, this application is no longer valid for Consent Access",nil);
+            return NSLocalizedString(@"digi.me Consent Access. Sorry, this application is not valid for Consent Access",nil);
             break;
         
+        case ErrorSessionCreateAppIdNotFound:
+            return NSLocalizedString(@"digi.me Consent Access. Sorry, this application ID is not found",nil);
+            break;
+            
+        case ErrorSessionCreateContractNotFound:
+            return NSLocalizedString(@"digi.me Consent Access. Sorry, the contract ID is not found",nil);
+            break;
+            
         case ErrorSessionCreateContractHasExpired:
             return NSLocalizedString(@"digi.me Consent Access. Sorry, Consent Access contract has expired",nil);
             break;

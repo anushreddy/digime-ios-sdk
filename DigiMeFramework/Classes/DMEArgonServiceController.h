@@ -11,12 +11,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern const struct ArgonErrorCodes
+{
+    __unsafe_unretained NSString *InvalidConsentAccessApplication;
+    __unsafe_unretained NSString *InvalidContractId;
+    
+} ArgonErrorCode;
+
 @protocol DMEArgonServiceControllerDelegate <NSObject>
 
 @required
 - (void)digimeFrameworkLogWithMessage:(NSString*)message;
 - (void)digimeFrameworkDidChangeOperationState:(DigiMeFrameworkOperationState)state;
 - (void)digimeFrameworkJsonFilesDownloadProgress:(float)progress;
+- (void)notifyUserWithErrorCode:(DigiMeFrameworkErrorCode)errorCode;
 @end
 
 @interface DMEArgonServiceController : NSObject
