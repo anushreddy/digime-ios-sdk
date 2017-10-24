@@ -65,8 +65,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		06D18250E413BD3F6CDE73D15FDC2431 /* Pods_DigiMeFramework_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DigiMeFramework_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0861B5A16615AE5A27168D589369FF30 /* DigiMeFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DigiMeFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		06D18250E413BD3F6CDE73D15FDC2431 /* Pods_DigiMeFramework_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DigiMeFramework_Tests.framework; path = "Pods-DigiMeFramework_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0861B5A16615AE5A27168D589369FF30 /* DigiMeFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = DigiMeFramework.framework; path = DigiMeFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		08F8C79E21104EBD9C2CD8AFF0D18FCC /* DMESecurityController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DMESecurityController.h; sourceTree = "<group>"; };
 		0BE511317A1252950CC6027B1FE2BE79 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		0FA1A56705C5693D93DB4454EA47F058 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -79,12 +79,12 @@
 		1E8C2DFFD6926246262BA61DEC24AEB0 /* Pods-DigiMeFramework_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DigiMeFramework_Example-umbrella.h"; sourceTree = "<group>"; };
 		20C03DC0FA4CA77CC550879E3D78D0EA /* Pods-DigiMeFramework_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DigiMeFramework_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		24A91D29B54B893A8CD6E37D2DCA3306 /* Pods-DigiMeFramework_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DigiMeFramework_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		303625089728C3BCF51058C74778D6DC /* Pods-DigiMeFramework_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-DigiMeFramework_Example.modulemap"; sourceTree = "<group>"; };
+		303625089728C3BCF51058C74778D6DC /* Pods-DigiMeFramework_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-DigiMeFramework_Example.modulemap"; sourceTree = "<group>"; };
 		3598CB28593C7F9E0C0A65BD02AFBA1F /* DMEUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DMEUtilities.m; sourceTree = "<group>"; };
-		3AA3804FD5479546D68E6F2BE27D0D7D /* apiCert1.der */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = apiCert1.der; sourceTree = "<group>"; };
+		3AA3804FD5479546D68E6F2BE27D0D7D /* apiCert1.der */ = {isa = PBXFileReference; includeInIndex = 1; path = apiCert1.der; sourceTree = "<group>"; };
 		3AE106D995B0ADDD54B5EE5ADEE9CC0D /* Pods-DigiMeFramework_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DigiMeFramework_Example-dummy.m"; sourceTree = "<group>"; };
-		477B97E488F38750C55AD6E6232752D7 /* DigiMeFramework.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = DigiMeFramework.modulemap; sourceTree = "<group>"; };
-		5A364106D11B87ED12A56683935FAA47 /* Pods_DigiMeFramework_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DigiMeFramework_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		477B97E488F38750C55AD6E6232752D7 /* DigiMeFramework.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = DigiMeFramework.modulemap; sourceTree = "<group>"; };
+		5A364106D11B87ED12A56683935FAA47 /* Pods_DigiMeFramework_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DigiMeFramework_Example.framework; path = "Pods-DigiMeFramework_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8FA599E263AEE86CDDE35690BD9084 /* DigiMeFramework.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DigiMeFramework.h; sourceTree = "<group>"; };
 		64EF675A0C3A6FB80DBF2D08F228B30C /* DMERunLoopOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DMERunLoopOperation.h; sourceTree = "<group>"; };
 		665D4DDA021EA07E2856F83EB74E45F4 /* DMERunLoopOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DMERunLoopOperation.m; sourceTree = "<group>"; };
@@ -97,10 +97,10 @@
 		7F68BF4FA45DB99044ADA609DB800482 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		8038C0605D083CD4EE038751223CC570 /* DigiMeFramework.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DigiMeFramework.xcconfig; sourceTree = "<group>"; };
 		84C2FFE20E5814CACE06CE0F6D710500 /* DigiMeFramework-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DigiMeFramework-prefix.pch"; sourceTree = "<group>"; };
-		8B0139C06798CB90118B539C15B1471B /* Pods-DigiMeFramework_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-DigiMeFramework_Tests.modulemap"; sourceTree = "<group>"; };
+		8B0139C06798CB90118B539C15B1471B /* Pods-DigiMeFramework_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-DigiMeFramework_Tests.modulemap"; sourceTree = "<group>"; };
 		8B19FB2A3B8DA8E86D2170B7595B13A0 /* NSError+Helper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSError+Helper.h"; sourceTree = "<group>"; };
 		928AD85062526F85050E3A541D0C7C96 /* Pods-DigiMeFramework_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DigiMeFramework_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9AB932D27365282A08B72673A4246CA0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2B0A648172245F63FFB6BCA8E7D6192 /* Pods-DigiMeFramework_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DigiMeFramework_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		AA2DACC89FA0DCF3DEB66E3A50F72F4D /* DMEUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DMEUtilities.h; sourceTree = "<group>"; };
@@ -110,13 +110,13 @@
 		D7B3BB9AC4E2A841CFAD690F87DD86B6 /* Pods-DigiMeFramework_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DigiMeFramework_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		DDCA17B22EF446CA5543F7A56F494E9A /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E01B9490E99DF915265C04C4F73B6C55 /* Pods-DigiMeFramework_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DigiMeFramework_Tests-umbrella.h"; sourceTree = "<group>"; };
-		E0CD33443C2D7DC5F9AAA8C33C82C140 /* DigiMeFramework.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DigiMeFramework.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0CD33443C2D7DC5F9AAA8C33C82C140 /* DigiMeFramework.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = DigiMeFramework.bundle; path = DigiMeFramework.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		E135D4AC01A5A04ABA3938705C5558E6 /* NSError+Helper.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NSError+Helper.m"; sourceTree = "<group>"; };
 		E789C83B95D8363C281264C12ED49218 /* DMEArgonServiceController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DMEArgonServiceController.h; sourceTree = "<group>"; };
 		ECC368F2830509A19859208F96FE09FD /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F0207231141C14703071F7C71FA8115A /* apiCert2.der */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = apiCert2.der; sourceTree = "<group>"; };
+		F0207231141C14703071F7C71FA8115A /* apiCert2.der */ = {isa = PBXFileReference; includeInIndex = 1; path = apiCert2.der; sourceTree = "<group>"; };
 		F07DB70706DB14D514F4BD3E7E096FBE /* DMESecurityController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DMESecurityController.m; sourceTree = "<group>"; };
-		F2449F03A3A76596EDEC209F842CB73F /* apiCert3.der */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; path = apiCert3.der; sourceTree = "<group>"; };
+		F2449F03A3A76596EDEC209F842CB73F /* apiCert3.der */ = {isa = PBXFileReference; includeInIndex = 1; path = apiCert3.der; sourceTree = "<group>"; };
 		F8FBCB61A8B65994A590EC4A468B843F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		FA80C459978BCD854B0F014068375E01 /* Pods-DigiMeFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DigiMeFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FF23209D2456C3D323740139610B3220 /* Pods-DigiMeFramework_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DigiMeFramework_Example-frameworks.sh"; sourceTree = "<group>"; };
@@ -439,7 +439,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -749,9 +749,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -759,21 +757,15 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POD_CONFIGURATION_DEBUG=1",
@@ -806,9 +798,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -816,20 +806,14 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POD_CONFIGURATION_RELEASE=1",
 					"$(inherited)",

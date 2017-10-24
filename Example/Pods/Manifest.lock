@@ -1,5 +1,5 @@
 PODS:
-  - DigiMeFramework (1.0.0)
+  - DigiMeFramework (1.0.1)
 
 DEPENDENCIES:
   - DigiMeFramework (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  DigiMeFramework: 88801f68761bbc2d72d878c28cb0b93bfb8a00c8
+  DigiMeFramework: 6dbfaa081456b91ca3d200236a648de044ed7885
 
 PODFILE CHECKSUM: 215cdfa579389727528f168bda6cddcc07a3b755
 
