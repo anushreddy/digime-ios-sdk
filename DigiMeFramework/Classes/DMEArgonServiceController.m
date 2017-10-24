@@ -474,7 +474,7 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
         NSString *domain = [[NSBundle bundleForClass:[self class]] objectForInfoDictionaryKey:@"ArgonDomain"];
         if (!domain)
         {
-            domain = @"alpha.devdigi.me";
+            domain = @"digi.me";
         }
         argonURL = [NSString stringWithFormat:@"https://api.%@/", domain];
     }
