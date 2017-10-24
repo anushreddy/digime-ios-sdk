@@ -11,7 +11,6 @@ import DigiMeFramework
 
 class ViewController: UIViewController {
 
-    var isLoading: Bool = false
     var loggerController = LogViewController()
     var contractID: String!
     var startDate = Date()
@@ -84,11 +83,6 @@ class ViewController: UIViewController {
     }
 
     private func requestConsentAccessData(p12FileName: String, p12Password: String) {
-        if(self.isLoading == true) {
-            loggerController.log(toView: "Cancelled. The previous request needs to be finished.")
-            return
-        }
-        self.isLoading = true
         let keyHex = SecurityUtilities.getPrivateKeyHex(p12FileName: p12FileName, p12Password: p12Password)
         DigiMeFramework.sharedInstance().digimeFrameworkInitiateDataRequest(withAppID: staticConstants.kAppID,
                                                                          contractID: self.contractID,
@@ -103,7 +97,6 @@ extension ViewController: DigiMeFrameworkDelegate {
     }
     
     func digimeFrameworkReceiveData(withFileNames fileNames: [String]?, filesWithContent: [AnyHashable : Any]?, error: Error?) {
-        self.isLoading = false
         
         if(error != nil) {
             self.loggerController.log(toView: String(describing: error))

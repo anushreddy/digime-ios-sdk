@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSError (Helper)
 
-- (NSError*)errorForErrorCode:(DigiMeFrameworkErrorCode)errorCode;
+- (NSError *)errorForErrorCode:(DigiMeFrameworkErrorCode)errorCode errorMessage:(NSString*)errorMessage;
++ (NSString *)getLocalizedMessageForErrorCode:(DigiMeFrameworkErrorCode)errorCode;
 
 @end
 

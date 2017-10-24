@@ -47,6 +47,8 @@ typedef NS_ENUM(NSInteger, DigiMeFrameworkErrorCode) {
     ErrorSessionCreateBadResponse                                                  = 710001,
     ErrorSessionCreateSessionKeyNotReceived                                        = 710002,
     ErrorSessionCreateAppIdRevoke                                                  = 710403,
+    ErrorSessionCreateAppIdNotFound                                                = 710404,
+    ErrorSessionCreateContractNotFound                                             = 710405,
     ErrorSessionCreateContractHasExpired                                           = 710410,
     
     ErrorContractRequestUnknown                                                    = 720000,
