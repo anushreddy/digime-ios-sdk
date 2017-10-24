@@ -19,7 +19,7 @@ const struct ArgonErrorCodes ArgonErrorCode =
     .InvalidContractId               = @"InvalidContractId",
 };
 
-static const NSString  *kDigimeConsentAccessVersion              = @"1.0.0";
+static const NSString  *kDigimeConsentAccessVersion              = @"1.0.1";
 static const NSString  *kDigimeConsentAccessPathSessionKeyCreate = @"v1/permission-access/session";
 static const NSString  *kDigimeConsentAccessPathDataGet          = @"v1/permission-access/query";
 static const NSString  *kDownloadQueue                           = @"kDownloadQueue";
