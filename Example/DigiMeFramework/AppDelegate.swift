@@ -16,6 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        assert(staticConstants.kAppId != "your_real_app_id"
+            && staticConstants.kContractId != "your_real_contract_id"
+            && staticConstants.kP12KeyStoreFileName != "your_real_p12_file_name"
+            && staticConstants.kP12KeyStorePassword != "your_real_key_password", "Please replace placeholder with the real value!")
+        
         return true
     }
 

@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         self.view.addSubview(loggerController.view)
         self.loggerController.didMove(toParentViewController: self)
         DigiMeFramework.sharedInstance().delegate = self
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Start", style: .plain, target: self, action: #selector(addTapped))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Start", style: .plain, target: self, action: #selector(runTapped))
         self.loggerController.log(toView: "Please press 'Start' to choose one of the available contracts and select it to begin requesting data.")
         self.loggerController.log(toView: "Also make sure that digi.me app is installed and onboarded")
         self.navigationController?.isToolbarHidden = false
@@ -46,35 +46,11 @@ class ViewController: UIViewController {
         self.loggerController.decreaseFontSize()
     }
     
-    @objc private func addTapped() {
-        let alertView = UIAlertController(title: nil, message: "Choose digi.me Consent Access Contract", preferredStyle: UIScreen.main.traitCollection.userInterfaceIdiom == .pad ? .alert : .actionSheet)
-        let contract1Action =  UIAlertAction(title: "All your data from the last 2 years", style: .default, handler: {
-            (alert: UIAlertAction!) -> Void in
-            self.startDate = Date()
-            self.loggerController.reset()
-            self.contractID = staticConstants.kContractID1
-            self.requestConsentAccessData(p12FileName: staticConstants.kP12FileName1
-                , p12Password: staticConstants.kP12Password)
-        })
-        
-        let contract2Action =  UIAlertAction(title: "All your data from the last 3 months", style: .default, handler: {
-            (alert: UIAlertAction!) -> Void in
-            self.startDate = Date()
-            self.loggerController.reset()
-            self.contractID = staticConstants.kContractID2
-            self.requestConsentAccessData(p12FileName: staticConstants.kP12FileName2
-                , p12Password: staticConstants.kP12Password)
-        })
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
-            (alert: UIAlertAction!) -> Void in
-        })
-        
-        alertView.addAction(contract1Action)
-        alertView.addAction(contract2Action)
-        alertView.addAction(cancelAction)
-        
-        self.present(alertView, animated: true, completion: nil)
+    @objc private func runTapped() {
+        self.startDate = Date()
+        self.loggerController.reset()
+        self.contractID = staticConstants.kContractId
+        self.requestConsentAccessData(p12FileName: staticConstants.kP12KeyStoreFileName, p12Password: staticConstants.kP12KeyStorePassword)
     }
     
     override func didReceiveMemoryWarning() {
@@ -84,7 +60,7 @@ class ViewController: UIViewController {
 
     private func requestConsentAccessData(p12FileName: String, p12Password: String) {
         let keyHex = SecurityUtilities.getPrivateKeyHex(p12FileName: p12FileName, p12Password: p12Password)
-        DigiMeFramework.sharedInstance().digimeFrameworkInitiateDataRequest(withAppID: staticConstants.kAppID,
+        DigiMeFramework.sharedInstance().digimeFrameworkInitiateDataRequest(withAppID: staticConstants.kAppId,
                                                                          contractID: self.contractID,
                                                                          rsaPrivateKeyHex:keyHex!)
     }
