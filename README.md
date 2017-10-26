@@ -80,12 +80,12 @@ Extend your Info.plist to support a new Custom URL Scheme. This is used for a ca
 <string>Consent Access</string>
 <key>CFBundleURLSchemes</key>
 <array>
-<string>digime-ca-XXXXXX</string>
+<string>digime-ca-your_real_app_id</string>
 </array>
 </dict>
 </array>
 ```
-`XXXXXX` - is your application ID given by digi.me Ltd.
+`your_real_app_id` - is your application ID given by digi.me support.
 
 Add this line in your .swift class to add a reference to the framework  `import DigiMeFramework`
 
