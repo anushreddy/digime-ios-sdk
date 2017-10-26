@@ -29,8 +29,7 @@ class ViewController: UIViewController {
         self.loggerController.didMove(toParentViewController: self)
         DigiMeFramework.sharedInstance().delegate = self
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Start", style: .plain, target: self, action: #selector(runTapped))
-        self.loggerController.log(toView: "Please press 'Start' to choose one of the available contracts and select it to begin requesting data.")
-        self.loggerController.log(toView: "Also make sure that digi.me app is installed and onboarded")
+        self.loggerController.log(toView: "Please press 'Start' to begin requesting data. Also make sure that digi.me app is installed and onboarded.")
         self.navigationController?.isToolbarHidden = false
         var items = [UIBarButtonItem]()
         items.append( UIBarButtonItem(title: "➖", style: .plain, target: self, action: #selector(zoomOut))) // replace add with your function

@@ -23,15 +23,14 @@ $ pod install
 ```
 Replace `your_real_contract_id` with the real contract ids:
 ```swift
-static let kContractID1 = "YOUR_CONTRACT_ID" // a contract for two years' content
-static let kContractID2 = "YOUR_CONTRACT_ID" // a contract for three months' content
+static let kContractId = "your_real_contract_id"
 ```
-Replace the default app name `skeleton` with one of your choosing (between 5 and 16 characters):
+Replace the default app name `your_real_app_id` with one of your choosing (32 characters hex string):
 
 ```swift
-static let kAppID = "YOUR_UNIQUE_APPLICATION_NAME"
+static let kAppId = "your_real_app_id"
 ```
-Replace the default `skeleton` with your chosen app name in the application Info.plist file:
+Replace the default `your_real_app_id` with your chosen app name in the application Info.plist file:
 
 ```bash
 /.../digime-ios-sdk/Example/DigiMeFramework/Info.plist
@@ -48,23 +47,22 @@ Info.plist part to be amended:
 <string>Consent Access</string>
 <key>CFBundleURLSchemes</key>
 <array>
-<string>digime-ca-YOUR_UNIQUE_APPLICATION_NAME</string>
+<string>digime-ca-your_real_app_id</string>
 </array>
 </dict>
 </array>
 ```
-[Ask digi.me support](http://devsupport.digi.me/) for the sample private keys in p12 format and replace the existing dummy files in the project:
+[Ask digi.me support](http://devsupport.digi.me/) for the sample private key in p12 format and add it to the the project.
+check if p12 file is available under 'Targets' > 'Build Phases' > 'Copy Bundle Resources'
 
 ```bash
-/.../digime-ios-sdk/Example/DigiMeFramework/CA_RSA_PRIVATE_KEY1.p12
-/.../digime-ios-sdk/Example/DigiMeFramework/CA_RSA_PRIVATE_KEY2.p12
+/.../digime-ios-sdk/Example/DigiMeFramework/CA_RSA_PRIVATE_KEY.p12
 ```
 
 Open project in XCode, build and run on your iOS device.
 (NB! Default settings allow you to build and run on XCode Simulator. To run this demo project on your ios device you may need to have a developer account registered on Apple Developer portal.)
 
-Press 'Start' button.
-Choose any contract from the list.
+Press 'Start' button to run the app.
 
 ![screen shot 1](https://raw.githubusercontent.com/digime/digime-ios-sdk/master/Example/ScreenShot1.png)
 
