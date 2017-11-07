@@ -12,6 +12,7 @@
 		1E1A157E1F76D8B4006AAC5D /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A15791F76D8B3006AAC5D /* LogViewController.swift */; };
 		1E1A157F1F76D8B4006AAC5D /* SecurityUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A157B1F76D8B3006AAC5D /* SecurityUtilities.swift */; };
 		1E1A15801F76D8B4006AAC5D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A157C1F76D8B3006AAC5D /* Extensions.swift */; };
+		1EA7EEA71FB0E9C8009B20E0 /* CA_RSA_PRIVATE_KEY.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 1EA7EEA61FB0E68D009B20E0 /* CA_RSA_PRIVATE_KEY.p12 */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -39,6 +40,7 @@
 		1E1A157C1F76D8B3006AAC5D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1E8749901F77A39600D4E028 /* LICENCE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = LICENCE.md; path = ../LICENCE.md; sourceTree = "<group>"; };
 		1E8749911F77A39600D4E028 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		1EA7EEA61FB0E68D009B20E0 /* CA_RSA_PRIVATE_KEY.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = CA_RSA_PRIVATE_KEY.p12; sourceTree = "<group>"; };
 		270996ED7E91B17BFD094705 /* Pods-DigiMeFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DigiMeFramework_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-DigiMeFramework_Example/Pods-DigiMeFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		5B012ABBD82EAC1A6B438852 /* Pods-DigiMeFramework_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DigiMeFramework_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DigiMeFramework_Example/Pods-DigiMeFramework_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* DigiMeFramework_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DigiMeFramework_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +116,7 @@
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				1E1A15781F76D8B3006AAC5D /* Constants.swift */,
 				1E1A157C1F76D8B3006AAC5D /* Extensions.swift */,
+				1EA7EEA61FB0E68D009B20E0 /* CA_RSA_PRIVATE_KEY.p12 */,
 				1E1A15791F76D8B3006AAC5D /* LogViewController.swift */,
 				1E1A157B1F76D8B3006AAC5D /* SecurityUtilities.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -262,6 +265,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EA7EEA71FB0E9C8009B20E0 /* CA_RSA_PRIVATE_KEY.p12 in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,

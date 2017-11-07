@@ -16,14 +16,14 @@ and run the following command:
 ```bash
 $ pod install
 ```
-[Ask digi.me support](http://devsupport.digi.me/) for the new contract ids and add them to the project by editing this file:
+[Ask digi.me support](http://devsupport.digi.me/) for the application id, also for the demo .p12 password and add them to the project by editing this file:
 
 ```
 /.../digime-ios-sdk/Example/DigiMeFramework/Constants.swift
 ```
-Replace `your_real_contract_id` with the real contract ids:
+Replace `your_real_key_password` with the real .p12 password:
 ```swift
-static let kContractId = "your_real_contract_id"
+static let kP12KeyStorePassword = "your_real_key_password"
 ```
 Replace the default app name `your_real_app_id` with one of your choosing (32 characters hex string):
 
@@ -51,12 +51,6 @@ Info.plist part to be amended:
 </array>
 </dict>
 </array>
-```
-[Ask digi.me support](http://devsupport.digi.me/) for the sample private key in p12 format and add it to the the project.
-check if p12 file is available under 'Targets' > 'Build Phases' > 'Copy Bundle Resources'
-
-```bash
-/.../digime-ios-sdk/Example/DigiMeFramework/CA_RSA_PRIVATE_KEY.p12
 ```
 
 Open project in XCode, build and run on your iOS device.
