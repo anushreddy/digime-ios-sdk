@@ -20,6 +20,7 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
 @interface DigiMeFramework() <DMEArgonServiceControllerDelegate>
 
 @property (nonatomic, strong) DMEArgonServiceController* argonServiceController;
+@property (nonatomic, strong) NSDictionary *accounts;
 
 @end
 
@@ -59,6 +60,7 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
 
 - (void)reset
 {
+    self.accounts                        = nil;
     self.argonServiceController          = nil;
     self.argonServiceController          = [DMEArgonServiceController new];
     self.argonServiceController.delegate = self;
@@ -154,6 +156,8 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
     NSAssert(result != NO, @"Error saving RSA private key to local keychain");
     if(!result) [self terminateWithErrorID:ErrorSecurityRSAPrivateKeyDataIsInvalid];
     
+    [self reset];
+    
     [self digimeFrameworkDidChangeOperationState:StateRequestingSessionKey];
     
     [self.argonServiceController sessionKeyCreateWithAppID:appID
@@ -225,6 +229,39 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
                                                 }
                                                 
                                             }];
+}
+
+- (void)digimeFrameworkGetAccountInfoWithAccountID:(nonnull NSString *) accountID
+                                    withCompletion:(nonnull void (^)(NSDictionary * _Nullable accountInfo))completion
+{
+    [self digimeFrameworkGetAllAccountsInfoWithCompletion:^(NSDictionary * _Nullable data) {
+
+        if (data && [data valueForKey:@"accounts"])
+        {
+            NSArray *accounts = [data valueForKey:@"accounts"];
+            for (NSDictionary *account in accounts)
+            {
+                NSString *identifier = account[@"id"];
+                if(account && identifier && [identifier isEqualToString:accountID])
+                    completion(account);
+            }
+        }
+        completion(nil);
+    }];
+}
+
+- (void)digimeFrameworkGetAllAccountsInfoWithCompletion:(nonnull void (^)(NSDictionary * _Nullable accounts))completion
+{
+    if (self.accounts)
+    {
+        completion(self.accounts);
+    }
+    else
+    {
+        [self updateAccountInformationWithCompletion:^{
+            completion(self.accounts);
+        }];
+    }
 }
 
 #pragma mark - Framwork Delegate methods calls
@@ -299,7 +336,29 @@ NSString * kCADigimeResponse    = @"CADigimeResponse";
         [self.delegate digimeFrameworkReceiveDataWithFileNames:fileNames filesWithContent:filesWithContent error:nil];
     }
     
-    [self reset];
+    [self updateAccountInformationWithCompletion:nil];
+}
+
+-(void)updateAccountInformationWithCompletion:(void(^)(void))completion
+{
+    __weak __typeof(DigiMeFramework *)weakSelf = self;
+    
+    [self.argonServiceController getAccountsDataWithCompletion:^(NSDictionary * _Nullable accounts, NSError * _Nullable error) {
+        
+        __strong __typeof(self)strongSelf = weakSelf;
+        
+        if (error)
+        {
+            [strongSelf digimeFrameworkLogWithMessage:[NSString stringWithFormat:NSLocalizedString(@"Error retrieving account info. Error: %@", nil), error.localizedDescription]];
+        }
+        else
+        {
+            strongSelf.accounts = accounts;
+        }
+        
+        if (completion)
+            completion();
+    }];
 }
 
 #pragma mark - Utilities

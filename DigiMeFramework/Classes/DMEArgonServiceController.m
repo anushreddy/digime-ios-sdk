@@ -400,7 +400,7 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
                             [strongSelf.filesWithContentLock unlock];
                         } 
                     }
-                    else if ([[responseDictionary objectForKey:@"fileContent"] isKindOfClass:[NSArray class]])
+                    else if ([responseDictionary objectForKey:@"fileContent"])
                     {
                         NSArray* fileContent = [responseDictionary objectForKey:@"fileContent"];
                         NSAssert(fileContent != nil, @"File content data is nil");
@@ -409,7 +409,7 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
                         [strongSelf progressDidChanged];
                         [strongSelf.filesWithContentLock unlock];
                     }
-                    else
+                    else if (responseDictionary && [responseDictionary valueForKeyPath:@"error.message"])
                     {
                         if (strongSelf.returnFinalDataCompletionHandler)
                             strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]); // Argon alpha will return some more debugging info and not just a string message. Here we need to be wrapped as a formatted string.
@@ -431,16 +431,10 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
                     [finalOp addDependency:downloadOperation];
                     [strongSelf.downloadQueue addOperation:downloadOperation];
                 }
-                else if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]])
+                else if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]] && [responseDictionary valueForKeyPath:@"error.message"])
                 {
                     if (strongSelf.returnFinalDataCompletionHandler)
                         strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]); // Argon alpha will return some more debugging info and not just a string message. Here we need to be wrapped as a formatted string.
-                    [strongSelf cancelAllOperations];
-                }
-                else
-                {
-                    if (strongSelf.returnFinalDataCompletionHandler)
-                        strongSelf.returnFinalDataCompletionHandler(nil,nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFileDataServerResponseWithError errorMessage:[NSError getLocalizedMessageForErrorCode:ErrorDataGetFileDataServerResponseWithError]]);
                     [strongSelf cancelAllOperations];
                 }
                 
@@ -453,6 +447,94 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
         
     return runLoopOperation;
     
+}
+
+- (void)getAccountsDataWithCompletion:(void(^)(NSDictionary * _Nullable accounts, NSError * _Nullable error))completion
+{
+    if (!self.sessionKey)
+    {
+        if (completion)
+            completion(nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable errorMessage:[NSError getLocalizedMessageForErrorCode:ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable]]);
+        return;
+    }
+    
+    [self digimeFrameworkLogWithMessage:NSLocalizedString(@"Retriving accounts information...",nil)];
+    
+    NSString *host = [self baseUrl];
+    NSURLComponents *components = [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%@%@/%@/%@"
+                                                                         , host
+                                                                         , kDigimeConsentAccessPathDataGet
+                                                                         , self.sessionKey
+                                                                         , @"accounts.json"]];
+    NSURL *url = components.URL;
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    configuration.HTTPAdditionalHeaders = @{ @"Content-Type" : @"application/json", @"Accept" : @"application/json" };
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:360.0];
+    [request setHTTPMethod:@"GET"];
+    
+    __weak __typeof(DMEArgonServiceController *)weakSelf = self;
+    
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        __strong __typeof(DMEArgonServiceController *)strongSelf = weakSelf;
+        
+        [strongSelf digimeFrameworkLogWithMessage:NSLocalizedString(@"Received response 'Get Accounts Data'.",nil)];
+        
+        if (error)
+        {
+            if (completion)
+                completion(nil,error);
+        }
+        else
+        {
+            NSError *parsingError = nil;
+            NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parsingError];
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            
+            if (parsingError)
+            {
+                [strongSelf digimeFrameworkLogWithMessage:[NSString stringWithFormat:NSLocalizedString(@"Get Accounts Data. Parsing error (%@)",nil),  [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]]];
+                
+                if (completion)
+                    completion(nil,parsingError);
+            }
+            else if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]] && [responseDictionary valueForKeyPath:@"error.message"])
+            {
+                if (completion)
+                    completion(nil,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]);
+            }
+            else if (httpResponse && httpResponse.statusCode == 200 && responseDictionary)
+            {
+                NSString *base64Encoded = [responseDictionary objectForKey:@"fileContent"];
+                
+                if (base64Encoded && [base64Encoded isKindOfClass:[NSString class]] && [base64Encoded isBase64])
+                {
+                    NSData *encryptedData = [[DMESecurityController sharedInstance] base64DataFromString:base64Encoded];
+                    NSData *privateKeyData = [[DMESecurityController sharedInstance] rsaPrivateKeyDataGet];
+                    NSData *decryptedData = [[DMESecurityController sharedInstance] getDataFromEncryptedBytes:encryptedData privateKeyData:privateKeyData];
+                    NSAssert(decryptedData != nil, @"Decrypted data is nil");
+                    
+                    if (decryptedData)
+                    {
+                        NSDictionary *content = [NSJSONSerialization JSONObjectWithData:decryptedData options:kNilOptions error:&parsingError];
+                        NSAssert(content != nil, @"Accounts file content is nil");
+                        if (completion)
+                            completion(content,nil);
+                    }
+                }
+                else if ([responseDictionary objectForKey:@"fileContent"]) // data not encrypted
+                {
+                    NSDictionary *content = [responseDictionary objectForKey:@"fileContent"];
+                    NSAssert(content != nil, @"Accounts file content is nil");
+                    if (completion)
+                        completion(content,nil);
+                }
+            }
+        }
+    }];
+    
+    [dataTask resume];
 }
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
@@ -524,14 +606,11 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
     if (context == &kDownloadQueue && [keyPath isEqualToString:NSStringFromSelector(@selector(operationCount))])
     {
         NSNumber *operationCount = change[NSKeyValueChangeNewKey];
-        if (operationCount.integerValue == 0 && self.fileList.count == self.filesWithContent.count)
+        if (operationCount.integerValue == 0 && self.filesWithContent.count > 0 && self.returnFinalDataCompletionHandler)
         {
-            if (self.fileList.count == self.filesWithContent.count && self.returnFinalDataCompletionHandler)
-            {
-                self.isDownloadingData = NO;
-                [self digimeFrameworkDidChangeOperationState:StateDataRequestReceived];
-                self.returnFinalDataCompletionHandler(self.fileList,self.filesWithContent,nil);
-            }
+            self.isDownloadingData = NO;
+            [self digimeFrameworkDidChangeOperationState:StateDataRequestReceived];
+            self.returnFinalDataCompletionHandler(self.fileList,self.filesWithContent,nil);
         }
     }
     else

@@ -61,6 +61,7 @@ typedef NS_ENUM(NSInteger, DigiMeFrameworkErrorCode) {
     ErrorDataGetFilesListDataIsNotCorrect                                          = 740003,
     ErrorDataGetFileDataServerResponseWithError                                    = 740004,
     ErrorDataGetFileDataDataIsNotCorrect                                           = 740005,
+    ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable                           = 740006,
     
     ErrorSchemaAppCommunicationsUnknown                                            = 750000,
     ErrorSchemaAppCommunicationsErrorSendingDataToDigimeAppNotAvailable            = 750001,
@@ -161,6 +162,27 @@ typedef NS_ENUM(NSInteger, DigiMeFrameworkErrorCode) {
 - (BOOL)digimeFrameworkApplication:(UIApplication *) application
                            openURL:(NSURL *) url
                            options:(NSDictionary *) options;
+
+/**
+ ///------------------------------------------------------------------------------------------------------
+ /// @name Consent Access    *** Receive account specific information
+ ///------------------------------------------------------------------------------------------------------
+ *
+ * @param         accountID         Account Entity ID 
+ * @param         completion        A handler block to execute. The block argument is a json object of an account specific information.
+ */
+- (void)digimeFrameworkGetAccountInfoWithAccountID:(nonnull NSString *) accountID
+                                    withCompletion:(nonnull void (^)(NSDictionary * _Nullable accountInfo)) completion;
+
+/**
+ ///------------------------------------------------------------------------------------------------------
+ /// @name Consent Access    *** Receive data about all available accounts
+ ///------------------------------------------------------------------------------------------------------
+ *
+ * @param         completion        A handler block to execute. The block argument is a json object of all available accounts.
+ */
+- (void)digimeFrameworkGetAllAccountsInfoWithCompletion:(nonnull void (^)(NSDictionary * _Nullable accounts)) completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

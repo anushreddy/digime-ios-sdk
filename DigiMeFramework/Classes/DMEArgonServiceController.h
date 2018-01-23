@@ -40,6 +40,7 @@ extern const struct ArgonErrorCodes
 
 - (BOOL)sessionKeyIsValid:(NSString*)sessionKey;
 
+- (void)getAccountsDataWithCompletion:(void(^)(NSDictionary * _Nullable accounts, NSError * _Nullable error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

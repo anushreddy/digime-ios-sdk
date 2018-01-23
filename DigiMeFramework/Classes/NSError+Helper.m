@@ -72,7 +72,11 @@
         case ErrorDataGetFileDataDataIsNotCorrect:
             return NSLocalizedString(@"digi.me Consent Access. File Data Data Is Not Correct",nil);
             break;
-
+            
+        case ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable:
+            return NSLocalizedString(@"digi.me Consent Access. Get Accounts Data Session Key Is Not Available",nil);
+            break;
+            
         case ErrorSchemaAppCommunicationsUnknown:
             return NSLocalizedString(@"digi.me Consent Access. Schema App Communications Unknown Error",nil);
             break;
