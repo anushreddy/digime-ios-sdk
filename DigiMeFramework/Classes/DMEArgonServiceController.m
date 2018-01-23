@@ -449,16 +449,15 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
     
 }
 
-- (void)getAccountsDataWithCompletion:(void(^)(NSDictionary * _Nullable accounts, NSError * _Nullable error))completion
+- (void)getAccountsDataWithCompletion:(nonnull void (^)(NSDictionary * _Nullable accounts, NSError * _Nullable error))completion
 {
     if (!self.sessionKey)
     {
-        if (completion)
-            completion(nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable errorMessage:[NSError getLocalizedMessageForErrorCode:ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable]]);
+        completion(nil,[[NSError alloc] errorForErrorCode:ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable errorMessage:[NSError getLocalizedMessageForErrorCode:ErrorDataGetFileAccountsDataSessionKeyIsNotAvailable]]);
         return;
     }
     
-    [self digimeFrameworkLogWithMessage:NSLocalizedString(@"Retriving accounts information...",nil)];
+    [self digimeFrameworkLogWithMessage:NSLocalizedString(@"Retrieving accounts information...",nil)];
     
     NSString *host = [self baseUrl];
     NSURLComponents *components = [NSURLComponents componentsWithString:[NSString stringWithFormat:@"%@%@/%@/%@"
@@ -483,8 +482,7 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
         
         if (error)
         {
-            if (completion)
-                completion(nil,error);
+            completion(nil,error);
         }
         else
         {
@@ -495,14 +493,12 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
             if (parsingError)
             {
                 [strongSelf digimeFrameworkLogWithMessage:[NSString stringWithFormat:NSLocalizedString(@"Get Accounts Data. Parsing error (%@)",nil),  [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]]];
-                
-                if (completion)
-                    completion(nil,parsingError);
+
+                completion(nil,parsingError);
             }
             else if (httpResponse && responseDictionary && [responseDictionary isKindOfClass:[NSDictionary class]] && [responseDictionary valueForKeyPath:@"error.message"])
             {
-                if (completion)
-                    completion(nil,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]);
+                completion(nil,[[NSError alloc] errorForErrorCode:httpResponse.statusCode errorMessage:[NSString stringWithFormat:@"%@",[responseDictionary valueForKeyPath:@"error.message"]]]);
             }
             else if (httpResponse && httpResponse.statusCode == 200 && responseDictionary)
             {
@@ -519,16 +515,14 @@ static const NSInteger  kMaxConcurrentOperationCount             = 10;
                     {
                         NSDictionary *content = [NSJSONSerialization JSONObjectWithData:decryptedData options:kNilOptions error:&parsingError];
                         NSAssert(content != nil, @"Accounts file content is nil");
-                        if (completion)
-                            completion(content,nil);
+                        completion(content,nil);
                     }
                 }
                 else if ([responseDictionary objectForKey:@"fileContent"]) // data not encrypted
                 {
                     NSDictionary *content = [responseDictionary objectForKey:@"fileContent"];
                     NSAssert(content != nil, @"Accounts file content is nil");
-                    if (completion)
-                        completion(content,nil);
+                    completion(content,nil);
                 }
             }
         }
